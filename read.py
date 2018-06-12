@@ -16,6 +16,14 @@ def cleanLine(line):
     return line
 
 
+def cleanName(names):
+    new = []
+    for i in range(len(names)):
+        a = names[i].title()
+        new.append(a)
+    return new
+
+
 def getAllColumn(filename, page, cName):
     a = []
     doc, page = readDoc(filename, page)
@@ -36,22 +44,29 @@ def getAllColumn(filename, page, cName):
 
 def dataPrep(fT):
     names = getAllColumn(fT, 0, "text:'First Name'")
+    names = cleanName(names)
     lastNames = getAllColumn(fT, 0, "text:'Last Name'")
     email = getAllColumn(fT, 0, "text:'Email'")
     qt = getAllColumn(fT, 0, "text:'Ticket Type'")
     return names, lastNames, email, qt
 
 
-def fetchAllCongreso(ce, cp):
-    names = getAllColumn(ce, 0, "text:'First Name'")
-    lastNames = getAllColumn(ce, 0, "text:'Last Name'")
-    email = getAllColumn(ce, 0, "text:'Email'")
-    qt = getAllColumn(ce, 0, "text:'Ticket Type'")
-    a = len(names)
-    b = []
-    for i in range(a):
-        b.append('Eventbrite')
-    return names, lastNames, email, qt, b
+def fetchAllCongreso(ce):
+    e, p, n = 0, 0, 0
+    names = getAllColumn(ce, 0, "text:'Nombre'")
+    names = cleanName(names)
+    phone = getAllColumn(ce, 0, "text:'Tlf.'")
+    email = getAllColumn(ce, 0, "text:'Correo'")
+    sop = getAllColumn(ce, 0, "text:'Actividad'")
+    for i in range(len(sop)):
+        if sop[i] == 'estudiante':
+            e += 1
+        elif sop[i] == 'profesional':
+            p += 1
+        else:
+            n += 1
+
+    return names, phone, email, sop, [e, p, n]
 
 
 def numerarTalleres(tallerExcel):
@@ -69,14 +84,13 @@ def numerarTalleres(tallerExcel):
     # print(h,'\n ######')
     for j in h:
         t = j.split(' ')
-        print(t)
         if 'Problemas' in t:
             talleres.append(1)
         elif 'ejercicio' in t:
             talleres.append(2)
         elif 'demencias' in t:
             talleres.append(3)
-        elif 'colegio:' in t:
+        elif 'colegio' in t:
             talleres.append(4)
         elif 'pre-escolar' in t:
             talleres.append(5)
@@ -92,7 +106,7 @@ def numerarTalleres(tallerExcel):
             talleres.append(10)
         elif 'breve' in t:
             talleres.append(11)
-        elif 'forense:' in t:
+        elif 'forense' in t:
             talleres.append(12)
         else:
             talleres.append(0)
@@ -103,14 +117,15 @@ def numerarTalleres(tallerExcel):
 def fetchTalleres(fT):
     numTalleres = []
     names = getAllColumn(fT, 0, "text:'Nombre'")
+    names = cleanName(names)
     email = getAllColumn(fT, 0, "text:'Correo'")
     phone = getAllColumn(fT, 0, "text:'Telefono'")
+    # country = getAllColumn(fT, 0, "text:'PaÃ­s'")
     talleres = getAllColumn(fT, 0, "text:'Talleres elegidos'")
     for i in range(len(talleres)):
         new = numerarTalleres(talleres[i])
         numTalleres.append(new)
-    print(numTalleres)
-    return names, email, phone, numTalleres
+    return names, email, phone, numTalleres #country
 
 
-#fetchTalleres('pruebas.xlsx')
+# fetchTalleres('pruebas.xlsx')
