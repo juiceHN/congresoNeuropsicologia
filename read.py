@@ -113,6 +113,49 @@ def numerarTalleres(tallerExcel):
 
     return talleres
 
+def nombrarTalleres(tallerExcel):
+    talleres = []
+    g = tallerExcel
+    h = g.split('// ')
+    topop = []
+    for r in range(len(h)):
+        if h[r] == '':
+            topop.append(r)
+
+    topop.sort(reverse=True)
+    for q in topop:
+        h.pop(q)
+    # print(h,'\n ######')
+    for j in h:
+        t = j.split(' ')
+        if 'Problemas' in t:
+            talleres.append('Problemas específicos de aprendizaje')
+        elif 'ejercicio' in t:
+            talleres.append('Efectos del ejercicio físico en las funciones ejecutivas')
+        elif 'demencias' in t:
+            talleres.append('Evaluación de las demencias')
+        elif 'colegio' in t:
+            talleres.append('Neuropsicología en el colegio: más allá de las pruebas')
+        elif 'pre-escolar' in t:
+            talleres.append('Evaluación neuropsicológica del niño pre-escolar')
+        elif 'Desarrollo' in t:
+            talleres.append('Valoración de Funciones Ejecutivas y del Desarrollo de 3 a 6 años')
+        elif 'validez' in t:
+            talleres.append('La validez ecológica de la Evaluación Funcional')
+        elif 'neuroimagen' in t:
+            talleres.append('Técnicas de neuroimagen en Neuropsicología')
+        elif 'Reconocimiento' in t:
+            talleres.append('Reconocimiento cerebral del engaño')
+        elif 'dislexia.' in t:
+            talleres.append('Neurobiología de la dislexia. Del diagnóstico al tratamiento')
+        elif 'breve' in t:
+            talleres.append('Evaluación neuropsicológica breve del niño y del adulto')
+        elif 'forense' in t:
+            talleres.append('Neuropsicología forense: facilitar los derechos y la justicia para las personas con discapacidades cerebrales.')
+        else:
+            talleres.append(0)
+
+    return talleres
 
 def fetchTalleres(fT):
     numTalleres = []
@@ -127,5 +170,16 @@ def fetchTalleres(fT):
         numTalleres.append(new)
     return names, email, phone, numTalleres #country
 
-
+def fetchTalleres2(fT):
+    numTalleres = []
+    names = getAllColumn(fT, 0, "text:'Nombre'")
+    names = cleanName(names)
+    email = getAllColumn(fT, 0, "text:'Correo'")
+    phone = getAllColumn(fT, 0, "text:'Telefono'")
+    # country = getAllColumn(fT, 0, "text:'PaÃ­s'")
+    talleres = getAllColumn(fT, 0, "text:'Talleres elegidos'")
+    for i in range(len(talleres)):
+        new = nombrarTalleres(talleres[i])
+        numTalleres.append(new)
+    return names, email, phone, numTalleres #country
 # fetchTalleres('pruebas.xlsx')

@@ -6,9 +6,9 @@ talleres2 = ['taller 1', 'taller 2', 'taller 3', 'taller 4', 'taller 5', 'taller
              'taller 7', 'taller 8', 'taller 9', 'taller 10', 'taller 11', 'taller 12']
 t1, t2, t3, t4, t5, t6 = [], [], [], [], [], []
 t7, t8, t9, t10, t11, t12 = [], [], [], [], [], []
-pc = 'reporte_cancelados'
+pc = 'reporte_cancelados.xlsx'
 pa = 'reporte_precongreso_aprobados.xlsx'  # talleres comprados
-cc = 'ReporteCongresoCanselado'
+cc = 'ReporteCongresoCancelados.xlsx'
 ca = 'ReporteCongresoAprobados.xlsx'  # estudiante y profecional aprovado
 
 
@@ -53,12 +53,14 @@ def writeSummary(master, lenghts, tot, cd):
     for i in range(len(cd)):
         sheet.write(i + 18, 2, cd[i])
     sheet.write(21, 2, (cd[0] + cd[1] + cd[2]))
+    zz = sheet.col(1)
+    zz.width = 256 * 55
 
 
 def writeAll():
     header3 = ['No.', 'Nombre', 'Correo', 'Telefono', 'Pais']
     masterF = xlwt.Workbook()
-    names, mail, phone, talleres3= r.fetchTalleres(pa)
+    names, mail, phone, talleres3 = r.fetchTalleres(pa)
     names2, phone2, mail2, ep, conts = r.fetchAllCongreso(ca)
     for i in range(len(talleres3)):
         a = [names[i], mail[i], phone[i]]
@@ -91,6 +93,14 @@ def writeAll():
     for i in range(len(talleres2)):
         tempsheet = masterF.add_sheet(talleres2[i])
         tempsheet.write(0, 0, talleres[i])
+        w1 = tempsheet.col(1)
+        w2 = tempsheet.col(2)
+        w3 = tempsheet.col(3)
+        w4 = tempsheet.col(4)
+        w1.width = 256 * 25
+        w2.width = 256 * 25
+        w3.width = 256 * 25
+        w4.width = 256 * 25
         for j in range(len(header3)):
             tempsheet.write(1, j, header3[j])
         if i == 0:
@@ -166,15 +176,69 @@ def writeAll():
                 tempsheet.write(2 + j, 2, t12[j][1])
                 tempsheet.write(2 + j, 3, t12[j][2])
     tempsheet = masterF.add_sheet('Congreso A')
-    headerc = ['Nombre', 'Telefono', 'Correo', 'Actividad'] 
-    tempsheet.write(0,0,'Congreso Aprobado')
+    headerc = ['No', 'Nombre', 'Telefono', 'Correo', 'Actividad']
+    tempsheet.write(0, 0, 'Congreso Aprobado')
+    w1 = tempsheet.col(1)
+    w2 = tempsheet.col(2)
+    w3 = tempsheet.col(3)
+    w4 = tempsheet.col(4)
+    w1.width = 256 * 25
+    w2.width = 256 * 25
+    w3.width = 256 * 25
+    w4.width = 256 * 25
     for i in range(len(headerc)):
         tempsheet.write(1, i, headerc[i])
     for i in range(len(names2)):
-        tempsheet.write(2 + i, 0, names2[i])
-        tempsheet.write(2 + i, 1, phone2[i])
-        tempsheet.write(2 + i, 2, mail2[i])
-        tempsheet.write(2 + i, 3, ep[i])
+        tempsheet.write(2 + i, 0, i)
+        tempsheet.write(2 + i, 1, names2[i])
+        tempsheet.write(2 + i, 2, phone2[i])
+        tempsheet.write(2 + i, 3, mail2[i])
+        tempsheet.write(2 + i, 4, ep[i])
+
+    namesC, phoneC, mailC, epC, contsC = r.fetchAllCongreso(cc)
+    tempsheet = masterF.add_sheet('Congreso C')
+    w1 = tempsheet.col(1)
+    w2 = tempsheet.col(2)
+    w3 = tempsheet.col(3)
+    w4 = tempsheet.col(4)
+    w1.width = 256 * 25
+    w2.width = 256 * 25
+    w3.width = 256 * 25
+    w4.width = 256 * 25
+    tempsheet.write(0, 0, 'Congreso Cancelado')
+    for i in range(len(headerc)):
+        tempsheet.write(1, i, headerc[i])
+    for i in range(len(namesC)):
+        tempsheet.write(2 + i, 0, i)
+        tempsheet.write(2 + i, 1, namesC[i])
+        tempsheet.write(2 + i, 2, phoneC[i])
+        tempsheet.write(2 + i, 3, mailC[i])
+        tempsheet.write(2 + i, 4, epC[i])
+    headerTC = ['No.', 'Nombre', 'Correo', 'Telefono',
+                'Taller 1', 'Taller 2', 'Taller 3']
+    namesTC, mailTC, phoneTC, talleres3TC = r.fetchTalleres2(pc)
+    tempsheet = masterF.add_sheet('Talleres C')
+    for j in range(len(headerTC)):
+        tempsheet.write(1, j, headerTC[j])
+    for i in range(len(namesTC)):
+        tempsheet.write(i + 2, 0, i)
+        tempsheet.write(i + 2, 1, namesTC[i])
+        tempsheet.write(i + 2, 2, mailTC[i])
+        tempsheet.write(i + 2, 3, phoneTC[i])
+        for g in range(len(talleres3TC[i])):
+            tempsheet.write(i + 2, 4 + g, talleres3TC[i][g])
+    w1 = tempsheet.col(1)
+    w2 = tempsheet.col(2)
+    w3 = tempsheet.col(3)
+    w4 = tempsheet.col(4)
+    w5 = tempsheet.col(5)
+    w6 = tempsheet.col(6)
+    w1.width = 256 * 25
+    w2.width = 256 * 25
+    w3.width = 256 * 25
+    w4.width = 256 * 60
+    w5.width = 256 * 60
+    w6.width = 256 * 60
     masterF.save('MasterTest.xls')
 
 writeAll()
